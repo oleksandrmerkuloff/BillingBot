@@ -4,6 +4,8 @@ from decimal import Decimal
 from django.db import models
 from django.core.validators import MinValueValidator
 
+from accounts.models import TelegramUser
+
 
 class Meter(models.Model):
     id = models.UUIDField(
@@ -31,6 +33,11 @@ class Meter(models.Model):
         validators=[MinValueValidator(0)]
         )
     updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(
+        TelegramUser,
+        on_delete=models.CASCADE,
+        related_name='meters'
+        )
 
     def __str__(self) -> str:
         return self.name
@@ -55,6 +62,11 @@ class Report(models.Model):
         null=True,
         blank=True,
         upload_to='bills/%Y/%m/'
+    )
+    user = models.ForeignKey(
+        TelegramUser,
+        on_delete=models.CASCADE,
+        related_name='reports'
     )
 
     @property
